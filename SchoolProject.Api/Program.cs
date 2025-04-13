@@ -3,6 +3,8 @@ using SchoolProject.Infrastructure;
 using SchoolProject.Infrastructure.Abstracts;
 using SchoolProject.Infrastructure.Data;
 using SchoolProject.Infrastructure.Repositories;
+using SchoolProject.Service;
+using SchoolProject.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,13 +19,20 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppliactionDBContext>(option => {
     option.UseSqlServer(builder.Configuration.GetConnectionString("dbcontext"));
 });
-builder.Services.AddInfrastuctureDependencies();
+
+#region Dependency Injection
+builder.Services.AddInfrastuctureDependencies()
+    .AddServiceDependencies()
+    .AddCoreDependencies();
+#endregion
+
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
