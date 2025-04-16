@@ -1,4 +1,5 @@
-﻿using SchoolProject.Data.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using SchoolProject.Data.Model;
 using SchoolProject.Infrastructure.Abstracts;
 using SchoolProject.Service.Abstractrs;
 using System;
@@ -19,6 +20,16 @@ namespace SchoolProject.Service.Implementaions
         public async Task<List<Student>> GetAllStudentsListAsync()
         {
            return await _sudentRepository.GetAllStudentsAsync(); ;
+        }
+
+
+        public async Task<Student> GetStudentByIDAsync(int id)
+        {
+            var student =  _sudentRepository.GetTableNoTracking()
+                .Include(x=>x.Department)
+                .Where(x=>x.StudentID.Equals(id))
+                .FirstOrDefault();
+            return student;
         }
     }
 }
