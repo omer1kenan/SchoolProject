@@ -1,10 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using SchoolProject.Infrastructure;
-using SchoolProject.Infrastructure.Abstracts;
-using SchoolProject.Infrastructure.Data;
-using SchoolProject.Infrastructure.Repositories;
-using SchoolProject.Service;
 using SchoolProject.Core;
+using SchoolProject.Core.MiddleWare;
+using SchoolProject.Infrastructure;
+using SchoolProject.Infrastructure.Data;
+using SchoolProject.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +15,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //Connection to Sql server
-builder.Services.AddDbContext<AppliactionDBContext>(option => {
+builder.Services.AddDbContext<AppliactionDBContext>(option =>
+{
     option.UseSqlServer(builder.Configuration.GetConnectionString("dbcontext"));
 });
 
@@ -36,6 +36,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseHttpsRedirection();
 
